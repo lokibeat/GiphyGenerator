@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gif like in peanut butter Generator</title>
+    <style type="text/css">
+        button,
+        div,
+        form,
+        input {
+          margin: 10px;
+        }
+      </style>
+</head>
+<body>
+    <div class="container">
+    
+<h1>Gif Generator</h1>
+
+
+
+    <!-- create HTML -->
+    <!-- button section -->
+    <div class="buttons-view"></div>
+    <!-- input bar -->
+    <div class="input-bar"></div>
+    <!-- INput button submit -->
+    <div class="warning"></div>
+    <form id="topic-form">
+        <label for="topic-input">Add a Topic</label>
+        <input type="text" id="topic-input">
+        
+  
+        <!-- Button triggers new topic to be added -->
+        <input id="add-topic" type="submit" value="Add a Topic">
+      </form>
+    <!-- display section -->
+    <div class="gifDisplay"></div>
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready();
+var topics = ["star wars","star trek","serenity","starship troopers","alien"];
+// create buttons - with properties
+function renderButtons() {
+
+// Clearing the div to begin
+$(".buttons-view").empty();
+
+// Looping through the array of topics
+for (var i = 0; i < topics.length; i++) {
+
+  // Then dynamicaly generating buttons for each topic in the array
+  // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+  var a = $("<button>");
+  // Adding a class of movie-btn to our button
+  a.addClass("topic-btn");
+  // Adding a data-attribute
+  a.attr("data-name", topics[i]);
+  // Providing the initial button text
+  a.text(topics[i]);
+  // Adding the button to the buttons-view div
+  $(".buttons-view").append(a);
+}
+}
+
+ // This function handles events when a new topic is sumbitted
+ $("#add-topic").on("click", function(event) {
+        event.preventDefault();
+        // This line grabs the input from the textbox
+        var topic = $("#topic-input").val().trim();
+        var topiclength = $("#topic-input").val().length;
+        console.log(topic);
+        if (topiclength==0) {
+        $(".warning").text("Please enter a movie"); 
+        } else {
+        // Adding movie from the textbox to our array
+        $(".warning").empty();
+        topics.push(topic);
+      }
+        // Calling renderButtons which handles the processing of our movie array
+        renderButtons();
+      });
+        renderButtons();
+
+
+// create API pull
+// process response
+// put into div
+// give on click properties to start/stop gif
+</script>    
+</body>
+</html>
