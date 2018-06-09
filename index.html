@@ -26,7 +26,7 @@
     <!-- input bar -->
     <div class="input-bar"></div>
     <!-- INput button submit -->
-    <div class="warning"></div>
+    <div class="display-area"></div>
     <form id="topic-form">
         <label for="topic-input">Add a Topic</label>
         <input type="text" id="topic-input">
@@ -43,6 +43,7 @@
 $(document).ready();
 var topics = ["star wars","star trek","serenity","starship troopers","alien"];
 // create buttons - with properties
+
 function renderButtons() {
 
 // Clearing the div to begin
@@ -65,6 +66,7 @@ for (var i = 0; i < topics.length; i++) {
 }
 }
 
+
  // This function handles events when a new topic is sumbitted
  $("#add-topic").on("click", function(event) {
         event.preventDefault();
@@ -72,20 +74,49 @@ for (var i = 0; i < topics.length; i++) {
         var topic = $("#topic-input").val().trim();
         var topiclength = $("#topic-input").val().length;
         console.log(topic);
+        // prevent empty string being submitted
         if (topiclength==0) {
-        $(".warning").text("Please enter a movie"); 
+        $(".display-area").text("Please enter a movie"); 
         } else {
         // Adding movie from the textbox to our array
-        $(".warning").empty();
+        // $(".display-area").empty();
         topics.push(topic);
-      }
-        // Calling renderButtons which handles the processing of our movie array
         renderButtons();
+        }
+        // Calling renderButtons which handles the processing of our movie array
       });
         renderButtons();
 
 
 // create API pull
+$(document).on("click", ".topic-btn",  pullGifs);
+
+
+
+
+function pullGifs() {
+  
+  var pressedButton =  $(this).attr("data-name");
+  // var queryURL = "https://api.giphy.com/v1/gifs/search?q=alien&api_key=dc6zaTOxFJmzC&limit=1";
+  var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + pressedButton + "&api_key=dc6zaTOxFJmzC&limit=2";
+  console.log(queryURL);
+  $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).then(function(response) {
+        retrievedGif = response.data;
+			$.each(retrievedGif, function(index,value){
+        animatedGif= value.images.original.url;
+        var gifRating = value.rating;
+       console.log(gifRating);
+        // Step 1: Run this file, click a button, and see what the response object looks like in the browser's console.
+        // Open up the data key, then open up the 0th, element. Study the keys and how the JSON is structured.
+                // var retrievedGif = response.data;
+                // console.log(retrievedGif);
+        $(".gifDisplay").append(gifRating);})
+      })
+  // renderButtons();
+};
 // process response
 // put into div
 // give on click properties to start/stop gif
