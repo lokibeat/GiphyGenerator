@@ -5,12 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Gif like in peanut butter Generator</title>
     <style type="text/css">
-        button,
-        div,
-        form,
-        input {
-          margin: 10px;
-        }
+        button {
+    background-color:red;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+        body {
+background-color: black;
+color: white;
+}
       </style>
 </head>
 <body>
@@ -41,7 +51,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready();
-var topics = ["star wars","star trek","serenity","starship troopers","alien"];
+var topics = ["Star Wars","Star Trek","Serenity","Starship Troopers","Aliens"];
 // create buttons - with properties
 
 function renderButtons() {
@@ -97,29 +107,36 @@ $(document).on("click", ".topic-btn",  pullGifs);
 function pullGifs() {
   
   var pressedButton =  $(this).attr("data-name");
-  // var queryURL = "https://api.giphy.com/v1/gifs/search?q=alien&api_key=dc6zaTOxFJmzC&limit=1";
-  var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + pressedButton + "&api_key=dc6zaTOxFJmzC&limit=2";
+  var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + pressedButton + "&api_key=dc6zaTOxFJmzC&limit=10";
   console.log(queryURL);
   $.ajax({
         url: queryURL,
         method: "GET"
       }).then(function(response) {
-        retrievedGif = response.data;
-			$.each(retrievedGif, function(index,value){
-        animatedGif= value.images.original.url;
-        var gifRating = value.rating;
-       console.log(gifRating);
-        // Step 1: Run this file, click a button, and see what the response object looks like in the browser's console.
-        // Open up the data key, then open up the 0th, element. Study the keys and how the JSON is structured.
-                // var retrievedGif = response.data;
-                // console.log(retrievedGif);
-        $(".gifDisplay").append(gifRating);})
-      })
-  // renderButtons();
-};
 // process response
-// put into div
-// give on click properties to start/stop gif
+  $(".gifDisplay").empty();
+  var gifResults = response.data;
+		//loop through api results and add attributes for displaying to window and to facilitate animation
+		for (i=0; i<gifResults.length; i++) {
+			var $gifDiv = $("<div>").addClass("gif-div");
+			var $p = $('<p>').text("Rating: " + gifResults[i].rating);
+			var $gif = $("<img>").addClass("gif").attr("src",gifResults[i].images.fixed_width_still.url).attr("gif-animate",gifResults[i].images.fixed_width.url).attr("gif-still", gifResults[i].images.fixed_width_still.url).attr("gif-state", "still");
+			$gifDiv.append($p);
+			$gifDiv.prepend($gif);
+			$(".gifDisplay").append($gifDiv);
+		};
+    //toggle animate and still states on click
+		$(".gif").on("click", function() {
+      		var state = $(this).attr("gif-state");
+      		if (state == "still") {
+        		$(this).attr("src", $(this).attr("gif-animate"));
+        		$(this).attr("gif-state", "animate");
+      		}else{
+        		$(this).attr("src", $(this).attr("gif-still"));
+        		$(this).attr("gif-state", "still");
+    		};
+		});
+})}
 </script>    
 </body>
 </html>
